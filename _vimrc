@@ -174,28 +174,15 @@ let g:ctrlp_working_path_mode = 'ra'
 
 " Auto update cscope database
 function Updatedb()
-    while 1
-        let db = findfile("cscope.out", ".;")
-        if (!empty(db))
-            exec "!ctags -R --c++-kinds=+p --fields=+ialS --extra=+q"
-
-            let curdir = getcwd()
-            silent exec "!find " .curdir ." -name '*.h' -o -name '*.c' -o -name '*.cc' -o -name '*.cpp' -o -name '*.hpp' > cscope.files"
-            silent exec "!cscope -Rb -i cscope.files"
-            exec "cs add cscope.out"
-            break
-        else
-            let curdir = getcwd()
-            exec "cd " .curdir
-            cd..
-        endif
-    endwhile
+    silent exec "!dir /s /b *.h *.c *.cc *.cpp *.hpp > cscope.files"
+    silent exec "!cscope -Rb -i cscope.files"
+    exec "cs add cscope.out"
 endfunction
 
 nmap <c-f5> :call Updatedb()<cr><cr>
 nmap <f5> :cs add cscope.out<cr>
 
-:set csprg=d:\_5Programs\cscope\cscope.exe
+:set csprg=d:\programs\Vim\vim73\cscope.exe
 
 " 查找C语言符号，即查找函数名、宏、枚举值等出现的地方
 nmap <C-c>s :cs find s <C-R>=expand("<cword>")<CR><CR>:cw<cr>
